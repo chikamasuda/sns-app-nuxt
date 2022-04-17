@@ -1,0 +1,118 @@
+body {
+  background-color: #17202a;
+  color: #fff;
+}
+
+.container {
+  display: flex;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+.sidebar {
+  padding-left: 15px;
+  padding-top: 20px;
+  width: 285px;
+}
+
+li {
+  list-style: none;
+}
+
+li.side-menu {
+  margin-top: 15px;
+}
+
+.side-menu img {
+  margin-right: 20px;
+  vertical-align: middle;
+}
+
+.form {
+  margin-top: 30px;
+  display: block;
+}
+
+.form-label {
+  margin-bottom: 10px;
+}
+
+.form textarea {
+  background: inherit;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 10px;
+}
+
+.form button {
+  text-align: right;
+  margin-left: auto;
+  display: block;
+  margin-top: 10px;
+  background-color: #4a27d1;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.article {
+  margin-left: 30px;
+  width: 100%;
+  padding-top: 15px;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #fff;
+  border-top: 1px solid #fff;
+}
+
+.article-title {
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  border-bottom: 1px solid #fff;
+}
+
+.article-list-item {
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+.user-info {
+  align-items: center;
+  display: flex;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.heart {
+  margin: 0 10px;
+}
+
+.cross {
+  margin: 0 50px 0 10px;
+}
+
+.article-list li {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #fff;
+}
+
+.content {
+  padding-top: 15px;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    display: block;
+  }
+  .article {
+    margin-left: 15px;
+    margin-top: 30px;
+  }
+}
