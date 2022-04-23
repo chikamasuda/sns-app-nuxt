@@ -12,7 +12,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - twitter-clone-nuxt',
-    title: 'twitter-clone-nuxt',
+    title: 'sns-app-nuxt',
     htmlAttrs: {
       lang: 'en'
     },
