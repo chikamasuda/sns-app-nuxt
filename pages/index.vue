@@ -7,13 +7,13 @@
       <nav>
         <ul>
           <li class="side-menu"><a class="menu-link"><img src="/img/home.png" alt="" width="25">ホーム</a></li>
-          <li class="side-menu"><a class="menu-link"><img src="/img/logout.png" alt="" width="25">ログアウト</a></li>
+          <li class="side-menu" @click="logout"><a class="menu-link"><img src="/img/logout.png" alt="" width="25">ログアウト</a></li>
         </ul>
       </nav>
       <form action="" class="form">
         <div class="form-label"><label for="">シェア</label></div>
         <textarea name="" id="" cols="37" rows="6"></textarea>
-        <button>シェアする</button>
+        <button class="button">シェアする</button>
       </form>
     </div>
     <main class="article">
@@ -33,3 +33,35 @@
     </main>
   </div>
 </template>
+
+<script>
+import firebase from '~/plugins/firebase'
+export default {
+  data() {
+    return {
+      message: 'ログインができておりません',
+    }
+  },
+  methods: {
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          console.log('ログアウトが完了しました')
+          this.$router.push('/login')
+        })
+    },
+  },
+  created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.message = 'ログイン済みです'
+        console.log(this.message)
+      } else {
+        this.$router.push('/login')
+      }
+    })
+  },
+}
+</script>

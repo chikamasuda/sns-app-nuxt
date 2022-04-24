@@ -45,7 +45,7 @@ li.side-menu {
   border-radius: 10px;
 }
 
-.form button {
+.button {
   text-align: right;
   margin-left: auto;
   display: block;
@@ -55,6 +55,14 @@ li.side-menu {
   padding: 10px 15px;
   border-radius: 20px;
   cursor: pointer;
+  border: none;
+}
+
+.auth-button {
+  text-align: center;
+  margin: 0 auto;
+  padding: 10px 20px;
+  margin-top: 15px;
 }
 
 .article {
@@ -106,6 +114,82 @@ li.side-menu {
   padding-top: 15px;
 }
 
+.errors {
+  color: red;
+  font-size: 12px;
+}
+
+.register {
+  position: absolute;
+  width: 380px;
+  background-color: #fff;
+  right: 0;
+  left: 0;
+  margin: auto;
+  top: 20%;
+  text-align: center;
+  height: 295px;
+  border-radius: 7px;
+}
+
+.login {
+  position: absolute;
+  width: 380px;
+  background-color: #fff;
+  right: 0;
+  left: 0;
+  margin: auto;
+  top: 20%;
+  text-align: center;
+  height: 235px;
+  border-radius: 7px;
+}
+
+.auth-input {
+  margin: 0 auto;
+  width: 300px;
+  padding: 12px 0 12px 5px;
+  margin-bottom: 15px;
+  border: 1px solid #333;
+  border-radius: 5px;
+}
+
+.last {
+  margin-bottom: 5px;
+}
+
+.auth-title {
+  color: #000;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.side-menu {
+  cursor: pointer;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo {
+  margin: 20px 0 0 20px;
+}
+
+.header-menu {
+  vertical-align: middle;
+  margin: 20px 30px 0 0px;
+}
+
+.header-menu-item {
+  color: #fff;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
 @media screen and (max-width: 768px) {
   .container {
     display: block;
@@ -113,5 +197,10 @@ li.side-menu {
   .article {
     margin-left: 15px;
     margin-top: 30px;
+  }
+  .register,
+  .login {
+    width: 350px;
+    top: 20%;
   }
 }
