@@ -18,6 +18,7 @@ export default {
       email: "",
       password: "",
       error: "",
+      uid: "",
     };
   },
   methods: {
@@ -33,23 +34,40 @@ export default {
       const res = await firebase
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
-        .then((data) => {
-          this.$router.push("/");
-        })
         .catch(error => {
-          switch (error.code) {
-            case "auth/invalid-email":
-              this.error =  "メールアドレスの形式が違います。";
-              return
-            case "auth/weak-password":
-              this.error = "パスワードは最低6文字以上にしてください";
-              return
-            default:
-              this.error = "登録情報をご確認ください。";
-              return 
-            ;
-          }
+          this.error = (code => {
+            switch (code) {
+              case 'auth/invalid-email':
+                return "メールアドレスの形式が違います。"
+              case "auth/email-already-in-use":
+                return "既にそのメールアドレスは使われています";
+              case "auth/wrong-password":
+                return "※パスワードが正しくありません";
+              case "auth/weak-password":
+                return "※パスワードは最低6文字以上にしてください";
+              default:
+                return "※メールアドレスとパスワードをご確認ください";
+            }
+          })(error.code);
         });
+        const user = {
+              email: res.user.email,
+              name: this.name,
+              uid: res.user.uid
+            };
+            console.log(user);
+
+            // CSRF保護の初期化とXSRF-TOKENクッキーの取得
+            this.$axios.get('/sanctum/csrf-cookie');
+
+            // Laravelにユーザー情報を送信する。
+            this.$axios.post('/api/register', user)
+            .catch(err => {
+                console.log({
+                  err
+                });
+            });
+          this.$router.push("/");
     }
   }
 };
