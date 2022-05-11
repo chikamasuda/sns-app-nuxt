@@ -29,6 +29,9 @@ li.side-menu {
   vertical-align: middle;
 }
 
+a.top-menu-item {
+  padding-top: 20px;
+}
 .form {
   margin-top: 30px;
   display: block;
@@ -102,7 +105,11 @@ li.side-menu {
 }
 
 .cross {
-  margin: 0 50px 0 10px;
+  margin-left: 10px;
+}
+
+.arrow {
+  margin-left: 50px;
 }
 
 .article-list li {
@@ -187,6 +194,11 @@ li.side-menu {
 .header-menu-item {
   color: #fff;
   margin-left: 20px;
+  text-decoration: none;
+}
+
+.top-menu-item {
+  color: #fff;
   text-decoration: none;
 }
 

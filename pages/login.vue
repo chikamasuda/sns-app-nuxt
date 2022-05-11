@@ -17,6 +17,7 @@ export default {
       email: null,
       password: null,
       error: null,
+      uid: null,
     }
   },
   methods: {
@@ -25,15 +26,31 @@ export default {
         this.error =  "メールアドレス・パスワードは入力必須です。";
         return
       }
-      const res = await firebase
+      await firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then((data) => {
-          this.$router.push('/')
+            console.log('ログイン成功');
+            this.$router.push('/');
         })
         .catch((error) => {
-          this.error = 'メールアドレスまたはパスワードが違います'
-          return
+          switch (error.code) {
+          case 'auth/invalid-email':
+            this.error = 'メールアドレスの形式が違います。';
+            break
+          case 'auth/user-disabled':
+            this.error = 'ユーザーが無効になっています。';
+            break
+          case 'auth/user-not-found':
+            this.error = 'ユーザーが存在しません。';
+            break
+          case 'auth/wrong-password':
+            this.error = 'パスワードが間違っております。';
+            break
+          default :
+            this.error ="エラーが起きました。しばらくしてから再度お試しください。"
+            break
+          }
         })
     },
   },

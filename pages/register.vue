@@ -18,7 +18,6 @@ export default {
       email: "",
       password: "",
       error: "",
-      uid: "",
     };
   },
   methods: {
@@ -31,43 +30,42 @@ export default {
         this.error =  "ユーザーネームは20文字以下にしてください";
         return
       }
-      const res = await firebase
+      await firebase
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
-        .catch(error => {
-          this.error = (code => {
-            switch (code) {
-              case 'auth/invalid-email':
-                return "メールアドレスの形式が違います。"
-              case "auth/email-already-in-use":
-                return "既にそのメールアドレスは使われています";
-              case "auth/wrong-password":
-                return "※パスワードが正しくありません";
-              case "auth/weak-password":
-                return "※パスワードは最低6文字以上にしてください";
-              default:
-                return "※メールアドレスとパスワードをご確認ください";
-            }
-          })(error.code);
-        });
-        const user = {
-              email: res.user.email,
-              name: this.name,
-              uid: res.user.uid
-            };
-            console.log(user);
+        .then((data) => {
+          const user = {
+            email: data.user.email,
+            name: this.name,
+            uid: data.user.uid
+          };
 
-            // CSRF保護の初期化とXSRF-TOKENクッキーの取得
-            this.$axios.get('/sanctum/csrf-cookie');
-
-            // Laravelにユーザー情報を送信する。
-            this.$axios.post('/api/register', user)
-            .catch(err => {
-                console.log({
-                  err
-                });
-            });
-          this.$router.push("/");
+          //Laravelにユーザー情報を送信する。
+          this.$axios.post('/api/register', user)
+          .then((data) => {
+            this.$router.push("/");
+            console.log('新規登録成功');
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case 'auth/invalid-email':
+              this.error = 'メールアドレスの形式が違います。';
+              break
+            case 'auth/email-already-in-use':
+              this.error = 'このメールアドレスはすでに使われています。';
+              break
+            case 'auth/weak-password':
+              this.error = 'パスワードは6文字以上で入力してください。';
+              break
+            default :
+              this.error ="エラーが起きました。しばらくしてから再度お試しください。"
+              break
+          }
+        })
     }
   }
 };

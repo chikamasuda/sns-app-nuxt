@@ -14,7 +14,7 @@ export default {
     titleTemplate: '%s - twitter-clone-nuxt',
     title: 'sns-app-nuxt',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ja'
     },
     meta: [
       { charset: 'utf-8' },
@@ -34,6 +34,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '@/plugins/firebase.js' },
+    //{ src: '@/plugins/authCheck.js' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -76,5 +77,5 @@ export default {
     css: [
       '~/assets/css/reset.css',
       '~/assets/css/main.css'
-    ],
+    ], 
 }
