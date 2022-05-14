@@ -20,15 +20,29 @@
       <h2 class="article-title">ホーム</h2>
       <ul class="article-list">
         <li class="article-list-item" v-for="post in postLists" :key="post.id">
-          <div class="user-info">
-            <div class="user-name">{{ post.users.name }}</div>
-            <span><img src="img/heart.png" alt="ハート" width="25" class="heart"></span>
-            <span>0</span>
-            <span @click="deletePost(post.id)" v-if="user">
-              <img src="img/cross.png" alt="削除" width="25" class="cross" v-if="user.uid === post.users.uid">
-            </span>
-            <span><img src="img/detail.png" alt="ページ遷移" width="25" class="arrow"></span>
-          </div>
+          <ul class="user-info" v-if="user">
+            <li class="user-name">{{ post.users.name }}</li>
+            <li v-if="post['likes'].find((item) => item.uid === user.uid)">
+              <font-awesome-layers class="fa">
+                <font-awesome-icon icon="heart" class="heart red-text" @click="unlike(post.id)"/>
+              </font-awesome-layers>
+              <span class="number">{{ post['likes'].length }}</span>
+            </li>
+            <li v-if="!post['likes'].find((item) => item.uid === user.uid)">
+              <font-awesome-layers class="fa">
+                <font-awesome-icon icon="heart" class="heart" @click="like(post.id)"/>
+              </font-awesome-layers>
+              <span class="number">{{ post['likes'].length }}</span>
+            </li>
+            <li>
+              <span @click="deletePost(post.id)">
+                <img src="img/cross.png" alt="削除" width="25" class="cross" v-if="user.uid === post.users.uid">
+              </span>
+            </li>
+            <li>
+              <span><img src="img/detail.png" alt="ページ遷移" width="25" class="arrow"></span>
+            </li>
+          </ul>
           <p class="content">{{ post.text }}</p>
         </li>
       </ul>
@@ -43,7 +57,7 @@ export default {
     return {
       postLists: [],
       newText: "",
-      uid: "",
+      number: 0,
     }
   },
   computed: {
@@ -51,6 +65,7 @@ export default {
       return this.$store.state.auth.currentUser;
     },
   },
+
   methods: {
     async logout() {
       await firebase
@@ -74,23 +89,37 @@ export default {
     async insertPost() {
       const sendData = {
         text: this.newText,
-        uid: this.user.uid
+        uid: this.user.uid,
       };
       await this.$axios.post("/api/post/", sendData);
       this.getPostList();
     },
+    async like(id) {
+      const sendData = {
+        uid: this.user.uid,
+      };
+      await this.$axios.post("/api/post/" + id + "/like", sendData);
+      this.getPostList();
+    },
+    async unlike(id) {
+      const sendData = {
+        uid: this.user.uid,
+      };
+      await this.$axios.post("/api/post/" + id + "/unlike", sendData);
+      this.getPostList();
+    },
   },
   created() {
-    firebase.auth().onAuthStateChanged(async user => {
-    if (user) {
-      const uid = user.uid
-      this.$store.dispatch("auth/setUser", { uid })
-    } else {
-      this.$store.dispatch("auth/setUser", null)
-      this.$router.push('/admin')
-    }
-  }),
     this.getPostList();
+    firebase.auth().onAuthStateChanged(async user => {
+      if (user) {
+        const uid = user.uid
+        this.$store.dispatch("auth/setUser", { uid })
+      } else {
+        this.$store.dispatch("auth/setUser", null)
+        this.$router.push('/login')
+      }
+    })
   },
 }
 </script>

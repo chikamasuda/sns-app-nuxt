@@ -50,7 +50,17 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
+    'nuxt-fontawesome'
   ],
+
+  fontawesome: {
+    imports: [
+      {
+        set: '@fortawesome/free-solid-svg-icons',
+        icons: ['fas']
+      }
+    ]
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
