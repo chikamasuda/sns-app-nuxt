@@ -12,7 +12,8 @@
       </nav>
       <form method="post" class="form">
         <div class="form-label"><label for="">シェア</label></div>
-        <textarea name="text" id="text" cols="37" rows="6" v-model="newText"></textarea>
+        <textarea name="text" id="text" cols="37" rows="6" v-model="text"></textarea>
+        <p v-if="error" class="errors">{{ error }}</p>
         <button class="button" @click="insertPost">シェアする</button>
       </form>
     </div>
@@ -56,8 +57,9 @@ export default {
   data() {
     return {
       postLists: [],
-      newText: "",
+      text: null,
       number: 0,
+      error: null,
     }
   },
   computed: {
@@ -88,11 +90,20 @@ export default {
     },
     async insertPost() {
       const sendData = {
-        text: this.newText,
+        text: this.text,
         uid: this.user.uid,
       };
-      await this.$axios.post("/api/post/", sendData);
-      this.getPostList();
+      await this.$axios.post("/api/post/", sendData)
+      .then(response => {
+        console.log('投稿成功')
+      })
+      .catch(error => {
+        if (error.response.data.status === 422) {
+          this.error = error.response.data.errors[0];
+        } else {
+          console.log("Error", error.response);
+        }
+      });
     },
     async like(id) {
       const sendData = {
