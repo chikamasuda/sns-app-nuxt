@@ -31,7 +31,7 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then((data) => {
             console.log('ログイン成功');
-            this.$router.push('/posts');
+            this.$router.push('/');
         })
         .catch((error) => {
           switch (error.code) {

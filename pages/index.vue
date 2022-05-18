@@ -7,7 +7,7 @@
       <nav>
         <ul>
           <li class="side-menu">
-            <NuxtLink to="/posts" class="sidebar-menu-item">
+            <NuxtLink to="/" class="sidebar-menu-item">
               <img src="/img/home.png" alt="" width="25">
               <span class="sidemenu-text">ホーム</span>
             </NuxtLink>
