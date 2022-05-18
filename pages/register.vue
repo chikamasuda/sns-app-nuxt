@@ -43,7 +43,7 @@ export default {
           //Laravelにユーザー情報を送信する。
           this.$axios.post('/api/register', user)
           .then((data) => {
-            this.$router.push("/");
+            this.$router.push("/posts");
             console.log('新規登録成功');
           })
           .catch((error) => {
