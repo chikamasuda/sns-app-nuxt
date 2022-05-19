@@ -43,7 +43,7 @@
                 </font-awesome-layers>
                 <span class="number">{{ likes.length }}</span>
               </div>
-              <span @click="deletePost(post.id)">
+              <span @click="deletePost(post.id)" v-if="post.users">
                 <img src="/img/cross.png" alt="削除" width="25" class="cross" v-if="user.uid === post.users.uid">
               </span>
             </div>
@@ -74,6 +74,7 @@ export default {
       post: {},
       postList: [],
       likes: [],
+      uid: "",
       comments: [],
       comment: "",
       text: "",
