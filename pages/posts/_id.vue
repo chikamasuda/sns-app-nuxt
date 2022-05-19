@@ -44,7 +44,7 @@
                 <span class="number">{{ likes.length }}</span>
               </div>
               <span @click="deletePost(post.id)">
-                <img src="/img/cross.png" alt="削除" width="25" class="cross">
+                <img src="/img/cross.png" alt="削除" width="25" class="cross" v-if="user.uid === post.users.uid">
               </span>
             </div>
             <p class="content">{{ post.text }}</p>
@@ -118,7 +118,7 @@ export default {
         text: this.text,
         uid: this.user.uid,
       };
-      await this.$axios.post("/api/posts/", sendData)
+      await this.$axios.post("/api/posts", sendData)
       .then((data) => {
         this.getPostList();
         this.text = "";

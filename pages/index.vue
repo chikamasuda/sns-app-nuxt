@@ -98,7 +98,7 @@ export default {
         text: this.text,
         uid: this.user.uid,
       };
-      await this.$axios.post("/api/posts/", sendData)
+      await this.$axios.post("/api/posts", sendData)
       .then((data) => {
         this.getPostList();
         this.text = "";
