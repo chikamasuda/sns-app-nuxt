@@ -65,7 +65,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: development ? 'http://localhost:8000' : 'https://domain.com',
+    baseURL: development ? 'http://localhost:8000' : 'https://thawing-sea-59706.herokuapp.com',
     proxy: true
   },
 
