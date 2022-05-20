@@ -124,7 +124,7 @@ export default {
     },
     toShow(id) {
       this.$router.push(`/posts/${id}`)
-    }
+    },
   },
   created() {
     this.getPostList();
@@ -134,7 +134,7 @@ export default {
         this.$store.dispatch("auth/setUser", { uid })
       } else {
         this.$store.dispatch("auth/setUser", null)
-        this.$router.push('/login')
+        this.$router.replace('/login')
       }
     })
   },

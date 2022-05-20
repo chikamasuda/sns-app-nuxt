@@ -192,7 +192,7 @@ export default {
         this.$store.dispatch("auth/setUser", { uid })
       } else {
         this.$store.dispatch("auth/setUser", null)
-        this.$router.push('/login')
+        this.$router.replace('/login')
       }
     })
   },
