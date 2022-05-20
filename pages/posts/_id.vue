@@ -178,7 +178,7 @@ export default {
         this.commentError = '';
       })
       .catch((error) => {
-        this.commentError = error.response.data.data.errors[''][0];
+        this.commentError = error.response.data.data.errors['comment'][0];
       })
     },
   },
