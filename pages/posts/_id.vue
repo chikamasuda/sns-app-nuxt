@@ -108,7 +108,7 @@ export default {
       await this.$axios.delete("/api/posts/" + id)
       .then((data) => {
         this.getPostList();
-        this.$router.push('/posts');
+        this.$router.push('/');
       })
       .catch((error) => {
         console.log(error);
