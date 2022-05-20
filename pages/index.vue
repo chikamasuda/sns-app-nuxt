@@ -60,6 +60,7 @@
 <script>
 import firebase from '~/plugins/firebase'
 export default {
+  middleware: 'authenticated',
   data() {
     return {
       postLists: [],
@@ -134,7 +135,6 @@ export default {
         this.$store.dispatch("auth/setUser", { uid })
       } else {
         this.$store.dispatch("auth/setUser", null)
-        this.$router.replace('/login')
       }
     })
   },

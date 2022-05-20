@@ -69,6 +69,7 @@
 <script>
 import firebase from '~/plugins/firebase'
 export default {
+  middleware: 'authenticated',
   data() {
     return {
       post: {},
