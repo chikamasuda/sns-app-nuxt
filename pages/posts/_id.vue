@@ -2,7 +2,7 @@
   <main class="container" dark>
     <div class="sidebar">
       <SideMenu />
-      <PostForm @submit="insertPost"/>
+      <PostForm @submit="insertPost" v-bind:postError="postError"/>
     </div>
     <section class="section">
       <div class="comment-area">
@@ -113,7 +113,7 @@ export default {
       this.getPost();
     },
     async getPost() {
-      const url = `/api/posts/${this.$route.params.id}`
+      const url = `/api/posts/${this.$route.params.id}`;
       await this.$axios.get(url)
         .then((response) => {
           console.log(response.data.post[0])
@@ -125,7 +125,7 @@ export default {
         })
     },
     async getComments() {
-      const url = `/api/posts/${this.$route.params.id}/comments`
+      const url = `/api/posts/${this.$route.params.id}/comments`;
       await this.$axios.get(url)
         .then((response) => {
           this.comments = response.data.comments
@@ -135,7 +135,7 @@ export default {
         })
     },
     async insertComment() {
-      const url = `/api/posts/${this.$route.params.id}/comments`
+      const url = `/api/posts/${this.$route.params.id}/comments`;
       const sendData = {
         comment: this.comment,
         uid: this.user.uid,
@@ -164,5 +164,5 @@ export default {
       }
     })
   },
-}
+};
 </script>

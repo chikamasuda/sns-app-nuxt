@@ -2,7 +2,7 @@
   <main class="container" dark>
     <div class="sidebar">
       <SideMenu />
-      <PostForm @submit="insertPost"/>
+      <PostForm @submit="insertPost" v-bind:postError="postError"></PostForm>
     </div>
     <section class="post-list">
       <h2 class="post-title">ホーム</h2>
@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       postLists: [],
-      postError: null,
+      postError: "",
       text: null,
       number: 0,
     }
@@ -52,6 +52,9 @@ export default {
     user() {
       return this.$store.state.auth.currentUser;
     },
+    error() {
+      return this.postError;
+    }
   },
   methods: {
     async getPostList() {
@@ -75,7 +78,6 @@ export default {
       })
       .catch((error) => {
         this.postError = error.response.data.data.errors['text'][0];
-        console.log(this.postError);
       })
     },
     async like(id) {
@@ -107,5 +109,5 @@ export default {
       }
     })
   },
-}
+};
 </script>
