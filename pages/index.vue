@@ -43,11 +43,11 @@ export default {
   data() {
     return {
       postLists: [],
+      postError: null,
       text: null,
       number: 0,
     }
   },
-  props: ["postError"], 
   computed: {
     user() {
       return this.$store.state.auth.currentUser;
@@ -74,7 +74,8 @@ export default {
         this.postError = '';
       })
       .catch((error) => {
-        postError = error.response.data.data.errors['text'][0];
+        this.postError = error.response.data.data.errors['text'][0];
+        console.log(this.postError);
       })
     },
     async like(id) {
