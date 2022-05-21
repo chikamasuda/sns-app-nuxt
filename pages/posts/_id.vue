@@ -1,29 +1,8 @@
 <template>
   <main class="container" dark>
     <div class="sidebar">
-      <h1 class="logo">
-        <img src="/img/logo.png" alt="ロゴ" width="100">
-      </h1>
-      <nav>
-        <ul>
-          <li class="side-menu">
-            <NuxtLink to="/" class="sidebar-menu-item">
-              <img src="/img/home.png" alt="" width="25">
-              <span class="sidemenu-text">ホーム</span>
-            </NuxtLink>
-          </li>
-          <li class="side-menu" @click="logout">
-            <img src="/img/logout.png" alt="" width="25">
-            <span class="sidemenu-text">ログアウト</span>
-          </li>
-        </ul>
-      </nav>
-      <form method="post" class="post-form" @submit.prevent="insertPost()">
-        <div class="post-form-label"><label for="">シェア</label></div>
-        <textarea name="text" id="text" cols="37" rows="6" v-model="text"></textarea>
-        <p v-if="postError" class="errors">{{ postError }}</p>
-        <button class="button" type="submit">シェアする</button>
-      </form>
+      <SideMenu />
+      <PostForm @submit="insertPost"/>
     </div>
     <section class="section">
       <div class="comment-area">
@@ -90,17 +69,6 @@ export default {
     },
   },
   methods: {
-    async logout() {
-      await firebase
-        .auth()
-        .signOut()
-        .then((data) => {
-          this.$router.push('/login');  
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
     async getPostList() {
       const resData = await this.$axios.get("/api/posts");
       this.postLists = resData.data.data;
@@ -115,9 +83,9 @@ export default {
         console.log(error);
       })
     },
-    async insertPost() {
+    async insertPost(text) {
       const sendData = {
-        text: this.text,
+        text: text,
         uid: this.user.uid,
       };
       await this.$axios.post("/api/posts", sendData)
@@ -184,16 +152,15 @@ export default {
     },
   },
   created() {
-    this.getPostList();
     this.getPost();
     this.getComments();
+    this.getPostList();
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const uid = user.uid
         this.$store.dispatch("auth/setUser", { uid })
       } else {
         this.$store.dispatch("auth/setUser", null)
-        this.$router.replace('/login')
       }
     })
   },
