@@ -7,29 +7,15 @@
     <section class="post-list">
       <h2 class="post-title">ホーム</h2>
       <ul>
-        <li class="post-list-item" v-for="post in postLists" :key="post.id">
-          <div class="user-info" v-if="user">
-            <p class="user-name">{{ post.users.name }}</p>
-            <div v-if="post['likes'].find((item) => item.uid === user.uid)">
-              <font-awesome-layers class="fa">
-                <font-awesome-icon icon="heart" class="heart red-text" @click="unlike(post.id)"/>
-              </font-awesome-layers>
-              <span class="number">{{ post['likes'].length }}</span>
-            </div>
-            <div v-if="!post['likes'].find((item) => item.uid === user.uid)">
-              <font-awesome-layers class="fa">
-                <font-awesome-icon icon="heart" class="heart" @click="like(post.id)"/>
-              </font-awesome-layers>
-              <span class="number">{{ post['likes'].length }}</span>
-            </div>
-            <span @click="deletePost(post.id)">
-              <img src="img/cross.png" alt="削除" width="25" class="cross" v-if="user.uid === post.users.uid">
-            </span>
-            <span @click="toShow(post.id)">
-              <img src="img/detail.png" alt="ページ遷移" width="25" class="arrow">
-            </span>
-          </div>
-          <p class="content">{{ post.text }}</p>
+        <li class="" v-for="post in postLists" :key="post.id">
+          <Message
+              v-if="post"
+              :post="post"
+              :uid="uid"
+              @like="like(post)"
+              @unlike="unlike(post)"
+              @deletePost="deletePost"
+            />
         </li>
       </ul>
     </section>
@@ -45,16 +31,13 @@ export default {
       postLists: [],
       postError: "",
       text: null,
-      number: 0,
+      uid: "",
     }
   },
   computed: {
     user() {
       return this.$store.state.auth.currentUser;
     },
-    error() {
-      return this.postError;
-    }
   },
   methods: {
     async getPostList() {
@@ -65,10 +48,10 @@ export default {
       await this.$axios.delete("/api/posts/" + id);
       this.getPostList();
     },
-    async insertPost(text, postError) {
+    async insertPost(text) {
       const sendData = {
         text: text,
-        uid: this.user.uid,
+        uid: this.uid,
       };
       await this.$axios.post("/api/posts", sendData)
       .then((data) => {
@@ -80,34 +63,34 @@ export default {
         this.postError = error.response.data.data.errors['text'][0];
       })
     },
-    async like(id) {
-      const sendData = {
-        uid: this.user.uid,
+    async like(post) {
+      const body = {
+        post_id: post.id,
+        uid: this.uid,
+        user_id: post.users.id
       };
-      await this.$axios.post("/api/posts/" + id + "/like", sendData);
-      this.getPostList();
+      const { data } = await this.$axios.post("/api/likes", body);
+      post.likes.push(data.like);
     },
-    async unlike(id) {
-      const sendData = {
-        uid: this.user.uid,
-      };
-      await this.$axios.post("/api/posts/" + id + "/unlike", sendData);
-      this.getPostList();
+    async unlike(post) {
+      const findLike = post.likes.find((like) => like.uid === this.uid);
+      console.log(findLike);
+      await this.$axios.delete(`/api/likes/${findLike.id}`);
+
+      const findLikeIdx = post.likes.findIndex(
+        (like) => like.id === findLike.id
+      );
+      post.likes.splice(findLikeIdx, 1);
     },
-    async toShow(id) {
-      await this.$router.push(`/posts/${id}`)
+    fetchData() {
+      firebase.auth().onAuthStateChanged(async (user) => {
+        this.uid = user.uid;
+        await this.getPostList();
+      });
     },
   },
   created() {
-    this.getPostList();
-    firebase.auth().onAuthStateChanged(async user => {
-      if (user) {
-        const uid = user.uid
-        this.$store.dispatch("auth/setUser", { uid })
-      } else {
-        this.$store.dispatch("auth/setUser", null)
-      }
-    })
+    this.fetchData();
   },
 };
 </script>

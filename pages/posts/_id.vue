@@ -7,30 +7,17 @@
     <section class="section">
       <div class="comment-area">
         <h2 class="comment-title">コメント</h2>
-          <div class="post-list-item">
-            <div class="user-info" v-if="user">
-              <p class="user-name" v-if="post.users">{{ post.users.name }}</p>
-              <div v-if="likes.find((item) => item.uid === user.uid)">
-                <font-awesome-layers class="fa">
-                  <font-awesome-icon icon="heart" class="heart red-text" @click="unlike(post.id)"/>
-                </font-awesome-layers>
-                <span class="number">{{ likes.length }}</span>
-              </div>
-              <div v-if="!likes.find((item) => item.uid === user.uid)">
-                <font-awesome-layers class="fa">
-                  <font-awesome-icon icon="heart" class="heart" @click="like(post.id)"/>
-                </font-awesome-layers>
-                <span class="number">{{ likes.length }}</span>
-              </div>
-              <span @click="deletePost(post.id)" v-if="post.users">
-                <img src="/img/cross.png" alt="削除" width="25" class="cross" v-if="user.uid === post.users.uid">
-              </span>
-            </div>
-            <p class="content">{{ post.text }}</p>
-          </div>
+          <Message
+              v-if="post"
+              :post="post"
+              :uid="uid"
+              @like="like"
+              @unlike="unlike"
+              @deletePost="deletePost"
+            />
         <h3 class="comment-list-title">コメント</h3>
-          <ul class="comment-list-item" v-for="comment in comments" :key="comment.id">
-            <li>
+          <ul class="comment-list-item" v-for="comment in post.comments" :key="comment.id">
+            <li v-if="post">
               <p class="comment-name">{{ comment.users.name }}</p>
               <p class="comment-text">{{ comment.comment }}</p>
             </li>
@@ -52,31 +39,18 @@ export default {
   data() {
     return {
       post: {},
-      postList: [],
-      likes: [],
       uid: "",
       comments: [],
       comment: "",
       text: "",
-      number: 0,
       postError: "",
       commentError: "",
     }
   },
-  computed: {
-    user() {
-      return this.$store.state.auth.currentUser;
-    },
-  },
   methods: {
-    async getPostList() {
-      const resData = await this.$axios.get("/api/posts");
-      this.postLists = resData.data.data;
-    },
     async deletePost(id) {
       await this.$axios.delete("/api/posts/" + id)
       .then((data) => {
-        this.getPostList();
         this.$router.push('/');
       })
       .catch((error) => {
@@ -86,11 +60,10 @@ export default {
     async insertPost(text) {
       const sendData = {
         text: text,
-        uid: this.user.uid,
+        uid: this.uid,
       };
       await this.$axios.post("/api/posts", sendData)
       .then((data) => {
-        this.getPostList();
         this.text = "";
         this.postError = '';
       })
@@ -98,51 +71,46 @@ export default {
         this.postError = error.response.data.data.errors['text'][0];
       })
     },
-    async like(id) {
-      const sendData = {
-        uid: this.user.uid,
+    async like() {
+      const body = {
+        post_id: this.post.id,
+        uid: this.uid,
+        user_id: this.post.users.id
       };
-      await this.$axios.post("/api/posts/" + id + "/like", sendData);
-      this.getPost();
+      const { data } = await this.$axios.post("/api/likes", body);
+      this.post.likes.push(data.like);
     },
-    async unlike(id) {
-      const sendData = {
-        uid: this.user.uid,
-      };
-      await this.$axios.post("/api/posts/" + id + "/unlike", sendData);
-      this.getPost();
+    async unlike() {
+      const findLike = this.post.likes.find(
+        (like) => like.uid === this.uid
+      );
+      await this.$axios.delete(`/api/likes/${findLike.id}`);
+      const findLikeIdx = this.post.likes.findIndex(
+        (like) => like.id === findLike.id
+      );
+      this.post.likes.splice(findLikeIdx, 1);
     },
+  
     async getPost() {
       const url = `/api/posts/${this.$route.params.id}`;
       await this.$axios.get(url)
         .then((response) => {
-          console.log(response.data.post[0])
-          this.post = response.data.post[0]
-          this.likes = response.data.post[0]['likes']
+          this.post = response.data.post;
+          this.comments = response.data.post.comments;
         })
         .catch((error) => {
-          this.$router.push('/posts')
-        })
-    },
-    async getComments() {
-      const url = `/api/posts/${this.$route.params.id}/comments`;
-      await this.$axios.get(url)
-        .then((response) => {
-          this.comments = response.data.comments
-        })
-        .catch((error) => {
-          this.$router.push('/posts')
+          this.$router.push('/');
         })
     },
     async insertComment() {
       const url = `/api/posts/${this.$route.params.id}/comments`;
       const sendData = {
         comment: this.comment,
-        uid: this.user.uid,
+        uid: this.uid,
       };
       await this.$axios.post(url, sendData)
       .then((data) => {
-        this.getComments();
+        this.getPost();
         this.comment = "";
         this.commentError = '';
       })
@@ -150,19 +118,15 @@ export default {
         this.commentError = error.response.data.data.errors['comment'][0];
       })
     },
+    fetchData() {
+      firebase.auth().onAuthStateChanged(async (user) => {
+        this.uid = user.uid;
+        await this.getPost();
+      });
+    },
   },
   created() {
-    this.getPost();
-    this.getComments();
-    this.getPostList();
-    firebase.auth().onAuthStateChanged(async user => {
-      if (user) {
-        const uid = user.uid
-        this.$store.dispatch("auth/setUser", { uid })
-      } else {
-        this.$store.dispatch("auth/setUser", null)
-      }
-    })
+    this.fetchData();
   },
 };
 </script>
