@@ -4,7 +4,7 @@
       <SideMenu />
       <PostForm @submit="insertPost" v-bind:postError="postError"/>
     </div>
-    <section class="section">
+    <section class="section" v-if="post">
       <div class="comment-area">
         <h2 class="comment-title">コメント</h2>
           <Message
@@ -17,7 +17,7 @@
             />
         <h3 class="comment-list-title">コメント</h3>
           <ul class="comment-list-item" v-for="comment in post.comments" :key="comment.id">
-            <li v-if="post">
+            <li>
               <p class="comment-name">{{ comment.users.name }}</p>
               <p class="comment-text">{{ comment.comment }}</p>
             </li>
