@@ -29,11 +29,17 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '~/assets/css/reset.css',
+    '~/assets/css/main.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '@/plugins/firebase.js' },
+    {
+      src: '@/plugins/plugin',
+      mode: 'client'
+    }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -72,9 +78,4 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   },
-
-  css: [
-    '~/assets/css/reset.css',
-    '~/assets/css/main.css'
-  ], 
 }

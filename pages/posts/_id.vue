@@ -1,39 +1,44 @@
 <template>
   <main class="container" dark>
-    <div class="sidebar">
-      <SideMenu />
-      <PostForm @submit="insertPost" v-bind:postError="postError"/>
-    </div>
-    <section class="section" v-if="post">
-      <div class="comment-area">
-        <h2 class="comment-title">コメント</h2>
-          <Message
-              v-if="post"
-              :post="post"
-              :uid="uid"
-              @like="like"
-              @unlike="unlike"
-              @deletePost="deletePost"
-            />
-        <h3 class="comment-list-title">コメント</h3>
-          <ul class="comment-list-item" v-for="comment in post.comments" :key="comment.id">
-            <li>
-              <p class="comment-name">{{ comment.users.name }}</p>
-              <p class="comment-text">{{ comment.comment }}</p>
-            </li>
-          </ul>
+      <div class="sidebar">
+        <SideMenu />
+        <PostForm @submit="insertPost" v-bind:postError="postError"/>
       </div>
-      <form method="post" class="comment-form" @submit.prevent="insertComment()">
-        <textarea name="text" id="text" rows="2" v-model="comment"></textarea>
-        <p v-if="commentError" class="errors">{{ commentError }}</p>
-        <button class="button btn-padding" type="submit">コメント</button>
-      </form>
-    </section>  
+      <section class="section" v-if="post">
+        <SkeletonScaffold>
+          <div class="comment-area">
+            <h2 class="comment-title">コメント</h2>
+              <Message
+                  v-if="post"
+                  :post="post"
+                  :uid="uid"
+                  @like="like"
+                  @unlike="unlike"
+                  @deletePost="deletePost"
+                />
+            <h3 class="comment-list-title">コメント</h3>
+              <ul class="comment-list-item" v-for="comment in post.comments" :key="comment.id">
+                <li>
+                  <p class="comment-name">{{ comment.users.name }}</p>
+                  <p class="comment-text">{{ comment.comment }}</p>
+                </li>
+              </ul>
+          </div>
+          <form method="post" class="comment-form" @submit.prevent="insertComment()">
+            <textarea name="text" id="text" rows="2" v-model="comment"></textarea>
+            <p v-if="commentError" class="errors">{{ commentError }}</p>
+            <button class="button btn-padding" type="submit">コメント</button>
+          </form>
+        </SkeletonScaffold>
+      </section> 
+    
   </main>
 </template>
 
 <script>
 import firebase from '~/plugins/firebase'
+
+
 export default {
   middleware: 'authenticated',
   data() {

@@ -21,8 +21,11 @@
     "nuxt": "^2.15.8",
     "nuxt-fontawesome": "^0.4.0",
     "vue": "^2.6.14",
+    "vue-content-loader": "^2.0.1",
+    "vue-loading-skeleton": "^2.0.0-beta.1",
     "vue-server-renderer": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
+    "vue-ultimate-skeleton-cards": "^1.0.3",
     "vuetify": "^2.6.1",
     "webpack": "^4.46.0"
   },
