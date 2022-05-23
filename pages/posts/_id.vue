@@ -5,7 +5,7 @@
         <PostForm @submit="insertPost" v-bind:postError="postError"/>
       </div>
       <section class="section" v-if="post">
-        <SkeletonScaffold primary="#17202a" animDisable>
+        <SkeletonScaffold primary="#17202a" animDisable style="padding: 0;">
           <div class="comment-area">
             <h2 class="comment-title">コメント</h2>
               <Message

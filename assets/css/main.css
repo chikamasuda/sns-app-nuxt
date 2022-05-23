@@ -3,9 +3,7 @@ body {
   background-color: #17202a;
   color: #fff;
 }
-div.skeleton-card {
-  padding: 0;
-}
+
 .container {
   display: flex;
   -webkit-box-align: start;
